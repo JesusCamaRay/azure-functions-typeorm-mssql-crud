@@ -1,5 +1,5 @@
 import { AzureFunction, Context } from "@azure/functions"
-import Database from "../utils/db";
+import Database from "../src/config/db.config";
 import { Connection } from 'typeorm';
 
 const database = new Database()

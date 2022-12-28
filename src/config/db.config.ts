@@ -11,7 +11,7 @@ import {
 import {
   SnakeNamingStrategy,
 } from 'typeorm-snake-naming-strategy'
-import { ENTITIES } from '../entities'
+import { ENTITIES } from '../entity'
 
 class Database {
   private connectionManager: ConnectionManager
