@@ -1,4 +1,5 @@
 import { AzureFunction, Context, HttpRequest } from "@azure/functions"
+import Database from "../src/config/db.config";
 import { NoteRepository } from "../src/repository";
 
 const httpTrigger: AzureFunction = async function (context: Context, req: HttpRequest): Promise<void> {
@@ -7,8 +8,9 @@ const httpTrigger: AzureFunction = async function (context: Context, req: HttpRe
         
         const id = req.params.id;
         const {title,description} = req.body;
+        const connection = await new Database().getConnection();
         
-        const updatedNote = await new NoteRepository().update(Number(id),{
+        const updatedNote = await new NoteRepository(connection).update(Number(id),{
             title,
             description
         })

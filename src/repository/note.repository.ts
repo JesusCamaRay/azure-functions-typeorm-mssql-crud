@@ -1,18 +1,19 @@
 import {Note} from '../entity'
 import Database from '../config/db.config';
 import {CreateNoteDTO, UpdateNoteDTO} from '../dto'
+import { Connection } from 'typeorm';
 
 export class NoteRepository {
 
-  private db: any = {};
+  private connection: any;
   private noteRepository: any;
 
-  constructor() {
-      this.db = new Database();
-      this.noteRepository = this.db.getRepository(Note);
-  }
-
-  async find() {
+  constructor(connection:Connection) {
+      this.connection = connection
+      this.noteRepository = this.connection.getRepository(Note);
+    }
+    
+    async find() {
       try {
           const notes = await this.noteRepository.find();
           return notes;
@@ -51,12 +52,14 @@ export class NoteRepository {
 
         const {title, description} = payload;
         
-        const toUpdateData = {
-          ...(title && {title}),
-          ...(description && {description})
+        if(title) {
+          note.title = title;
+        }
+        if(description) {
+          note.description = description;
         }
 
-        const updatedNote = await this.noteRepository.save(toUpdateData);
+        const updatedNote = await this.noteRepository.save(note);
         return updatedNote
       } catch(err) {
         throw Error(err);
