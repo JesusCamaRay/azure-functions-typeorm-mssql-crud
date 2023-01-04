@@ -13,6 +13,12 @@ export class Note {
     @Column("text")
     description: string
 
+    @Column({
+        default: false,
+        type: 'bit'
+    })
+    reminder: boolean
+
     @Column({ name: 'created_at' })
     createdAt: Date;
 

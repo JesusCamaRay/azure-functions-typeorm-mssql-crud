@@ -7,12 +7,13 @@ const httpTrigger: AzureFunction = async function (context: Context, req: HttpRe
         context.log('HTTP trigger function processed a request.');
         
         const id = req.params.id;
-        const {title,description} = req.body;
+        const {title,description,reminder} = req.body;
         const connection = await new Database().getConnection();
         
         const updatedNote = await new NoteRepository(connection).update(Number(id),{
             title,
-            description
+            description,
+            reminder
         })
 
         context.res = {

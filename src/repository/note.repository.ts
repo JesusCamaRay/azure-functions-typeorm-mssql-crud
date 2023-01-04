@@ -11,6 +11,7 @@ export class NoteRepository {
   constructor(connection:Connection) {
       this.connection = connection
       this.noteRepository = this.connection.getRepository(Note);
+      //review extension base (levantar modelos en conexion)
     }
     
     async find() {
@@ -34,8 +35,12 @@ export class NoteRepository {
   async create(payload:CreateNoteDTO) {
       try {
         const note = new Note();
-        note.title = payload.title;
-        note.description = payload.description;
+        for (const key in payload) {
+          if (payload.hasOwnProperty(key)) {
+            const element = payload[key];
+            note[key] = element;
+          }
+        }
         const newNote = await this.noteRepository.save(note);
         return newNote
       } catch(err) {
@@ -49,14 +54,13 @@ export class NoteRepository {
         if(!note) {
           throw Error(`Note with id ${id} not found`);
         }
-
-        const {title, description} = payload;
         
-        if(title) {
-          note.title = title;
-        }
-        if(description) {
-          note.description = description;
+        //iterate trough payload and update note
+        for (const key in payload) {
+          if (payload.hasOwnProperty(key)) {
+            const element = payload[key];
+            note[key] = element;
+          }
         }
 
         const updatedNote = await this.noteRepository.save(note);
